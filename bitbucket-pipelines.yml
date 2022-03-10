@@ -13,7 +13,7 @@ pipelines:
             - >
               python /usr/src/app/make-releases.py \
                 --create --create-eap \
-                --start-version=4 \
+                --start-version=4.1 \
                 --end-version=5 \
                 --dockerfile-buildargs='BASE_IMAGE=adoptopenjdk/openjdk11' \
                 --dockerfile-version-arg='CROWD_VERSION' \
@@ -52,7 +52,7 @@ pipelines:
             - >
               python /usr/src/app/make-releases.py \
                 --update \
-                --start-version=4 \
+                --start-version=4.1 \
                 --end-version=5 \
                 --dockerfile-buildargs='BASE_IMAGE=adoptopenjdk/openjdk11' \
                 --dockerfile-version-arg='CROWD_VERSION' \
