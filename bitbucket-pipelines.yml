@@ -9,7 +9,7 @@ pipelines:
             - docker
           script:
             - git submodule update --init --recursive
-            - echo ${DOCKER_BOT_PASSWORD} | docker login docker-public.packages.atlassian.com --username ${DOCKER_BOT_USERNAME} --password-stdin
+            - echo ${DOCKER_BOT_PASSWORD} | docker login ${DOCKER_REGISTRY} --username ${DOCKER_BOT_USERNAME} --password-stdin
             - >
               python /usr/src/app/make-releases.py \
                 --create --create-eap \
@@ -33,7 +33,7 @@ pipelines:
             - docker
           script:
             - git submodule update --init --recursive
-            - echo ${DOCKER_BOT_PASSWORD} | docker login docker-public.packages.atlassian.com --username ${DOCKER_BOT_USERNAME} --password-stdin
+            - echo ${DOCKER_BOT_PASSWORD} | docker login ${DOCKER_REGISTRY} --username ${DOCKER_BOT_USERNAME} --password-stdin
             - >
               docker build -t atlassian/crowd:${DOCKER_TAG}
               --build-arg BASE_IMAGE=adoptopenjdk/openjdk11
@@ -48,7 +48,7 @@ pipelines:
             - docker
           script:
             - git submodule update --init --recursive
-            - echo ${DOCKER_BOT_PASSWORD} | docker login docker-public.packages.atlassian.com --username ${DOCKER_BOT_USERNAME} --password-stdin
+            - echo ${DOCKER_BOT_PASSWORD} | docker login ${DOCKER_REGISTRY} --username ${DOCKER_BOT_USERNAME} --password-stdin
             - >
               python /usr/src/app/make-releases.py \
                 --update \
