@@ -61,15 +61,6 @@ pipelines:
                 --docker-repos='atlassian/crowd' \
                 --concurrent-builds='4' \
                 --push
-      - step:
-          name: Update README
-          image: python:3.7-alpine3.9
-          script:
-            - apk add --no-cache git
-            - git submodule update --init --recursive
-            - export DOCKER_REPO='atlassian/crowd'
-            - pip install -q requests
-            - python shared-components/image/push-readme.py
 
     '**':
       - step:
