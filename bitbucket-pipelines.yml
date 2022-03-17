@@ -1,4 +1,4 @@
-image: atlassian/docker-release-maker:latest
+image: docker-public.packages.atlassian.com/atlassian/docker-release-maker:latest
 
 pipelines:
   custom:
@@ -9,7 +9,7 @@ pipelines:
             - docker
           script:
             - git submodule update --init --recursive
-            - echo ${DOCKER_PASSWORD} | docker login --username ${DOCKER_USERNAME} --password-stdin
+            - echo ${DOCKER_BOT_PASSWORD} | docker login ${DOCKER_REGISTRY} --username ${DOCKER_BOT_USERNAME} --password-stdin
             - >
               python /usr/src/app/make-releases.py \
                 --create --create-eap \
@@ -33,7 +33,7 @@ pipelines:
             - docker
           script:
             - git submodule update --init --recursive
-            - echo ${DOCKER_PASSWORD} | docker login --username ${DOCKER_USERNAME} --password-stdin
+            - echo ${DOCKER_BOT_PASSWORD} | docker login ${DOCKER_REGISTRY} --username ${DOCKER_BOT_USERNAME} --password-stdin
             - >
               docker build -t atlassian/crowd:${DOCKER_TAG}
               --build-arg BASE_IMAGE=adoptopenjdk/openjdk11
@@ -48,7 +48,7 @@ pipelines:
             - docker
           script:
             - git submodule update --init --recursive
-            - echo ${DOCKER_PASSWORD} | docker login --username ${DOCKER_USERNAME} --password-stdin
+            - echo ${DOCKER_BOT_PASSWORD} | docker login ${DOCKER_REGISTRY} --username ${DOCKER_BOT_USERNAME} --password-stdin
             - >
               python /usr/src/app/make-releases.py \
                 --update \
@@ -61,15 +61,6 @@ pipelines:
                 --docker-repos='atlassian/crowd' \
                 --concurrent-builds='4' \
                 --push
-      - step:
-          name: Update README
-          image: python:3.7-alpine3.9
-          script:
-            - apk add --no-cache git
-            - git submodule update --init --recursive
-            - export DOCKER_REPO='atlassian/crowd'
-            - pip install -q requests
-            - python shared-components/image/push-readme.py
 
     '**':
       - step:
