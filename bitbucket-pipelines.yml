@@ -15,7 +15,7 @@ pipelines:
                 --create --create-eap \
                 --start-version=4.1 \
                 --end-version=5 \
-                --dockerfile-buildargs='BASE_IMAGE=adoptopenjdk/openjdk11' \
+                --dockerfile-buildargs='BASE_IMAGE=eclipse-temurin:11' \
                 --dockerfile-version-arg='CROWD_VERSION' \
                 --mac-product-key='crowd' \
                 --tag-suffixes='jdk11,ubuntu-jdk-11' \
@@ -36,7 +36,7 @@ pipelines:
             - echo ${DOCKER_BOT_PASSWORD} | docker login ${DOCKER_REGISTRY} --username ${DOCKER_BOT_USERNAME} --password-stdin
             - >
               docker build -t atlassian/crowd:${DOCKER_TAG}
-              --build-arg BASE_IMAGE=adoptopenjdk/openjdk11
+              --build-arg BASE_IMAGE=eclipse-temurin:11
               --build-arg CROWD_VERSION=${CROWD_VERSION} .
             - docker push atlassian/crowd:${DOCKER_TAG}
 
@@ -54,7 +54,7 @@ pipelines:
                 --update \
                 --start-version=4.1 \
                 --end-version=5 \
-                --dockerfile-buildargs='BASE_IMAGE=adoptopenjdk/openjdk11' \
+                --dockerfile-buildargs='BASE_IMAGE=eclipse-temurin:11' \
                 --dockerfile-version-arg='CROWD_VERSION' \
                 --mac-product-key='crowd' \
                 --tag-suffixes='jdk11,ubuntu-jdk-11' \
