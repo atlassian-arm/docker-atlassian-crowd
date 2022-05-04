@@ -4,6 +4,10 @@ Crowd provices single sign-on and user identity that's easy to use.
 
 Learn more about Crowd: [https://www.atlassian.com/software/crowd][1]
 
+# Contents
+
+[TOC]
+
 # Overview
 
 This Docker container makes it easy to get an instance of Crowd up and running.
@@ -285,6 +289,11 @@ For product support, go to:
 You can also visit the [Atlassian Data Center on
 Kubernetes](https://community.atlassian.com/t5/Atlassian-Data-Center-on/gh-p/DC_Kubernetes)
 forum for discussion on running Atlassian Data Center products in containers.
+
+# Changelog
+
+For a detailed list of changes to the Docker image configuration see [the Git
+commit history](https://bitbucket.org/atlassian-docker/docker-atlassian-crowd/commits/).
 
 # License
 
