@@ -58,6 +58,7 @@ pipelines:
                 --dockerfile-version-arg='CROWD_VERSION' \
                 --mac-product-key='crowd' \
                 --tag-suffixes='jdk11,ubuntu-jdk-11' \
+                --default-release \
                 --docker-repos='atlassian/crowd' \
                 --concurrent-builds='4' \
                 --push
