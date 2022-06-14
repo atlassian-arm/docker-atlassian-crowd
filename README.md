@@ -73,7 +73,7 @@ If Crowd is run behind a reverse proxy server as [described here][3], then you n
    also supported for backwards compatability.
 
 The following Tomcat/Catalina options are also supported. For more information,
-see https://tomcat.apache.org/tomcat-7.0-doc/config/index.html.
+see https://tomcat.apache.org/tomcat-8.5-doc/config/index.html.
 
 * `ATL_TOMCAT_MGMT_PORT` (default: 8000)
 * `ATL_TOMCAT_MAXTHREADS` (default: 100)

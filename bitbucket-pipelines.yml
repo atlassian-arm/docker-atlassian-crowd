@@ -14,7 +14,7 @@ pipelines:
               python /usr/src/app/make-releases.py \
                 --create --create-eap \
                 --start-version=4.1 \
-                --end-version=5 \
+                --end-version=6 \
                 --dockerfile-buildargs='BASE_IMAGE=adoptopenjdk/openjdk11' \
                 --dockerfile-version-arg='CROWD_VERSION' \
                 --mac-product-key='crowd' \
@@ -53,7 +53,7 @@ pipelines:
               python /usr/src/app/make-releases.py \
                 --update \
                 --start-version=4.1 \
-                --end-version=5 \
+                --end-version=6 \
                 --dockerfile-buildargs='BASE_IMAGE=adoptopenjdk/openjdk11' \
                 --dockerfile-version-arg='CROWD_VERSION' \
                 --mac-product-key='crowd' \
