@@ -12,7 +12,7 @@ Learn more about Crowd: [https://www.atlassian.com/software/crowd][1]
 
 This Docker container makes it easy to get an instance of Crowd up and running.
 
-Note: ** Use docker version >= 20.10.9. **
+Note: ** Use docker version >= 20.10.10. **
 
 # Quick Start
 
