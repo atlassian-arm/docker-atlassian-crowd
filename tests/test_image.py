@@ -4,6 +4,7 @@ import re
 import signal
 import testinfra
 import time
+from datetime import datetime
 
 from helpers import get_app_home, get_app_install_dir, get_bootstrap_proc, \
     parse_properties, parse_xml, run_image, \
@@ -34,6 +35,7 @@ def test_server_xml_defaults(docker_cli, image):
     assert connector.get('proxyPort') == ''
     assert connector.get('maxHttpHeaderSize') == '8192'
 
+
 def test_server_xml_access_log_enabled(docker_cli, image):
     environment = {
         'ATL_TOMCAT_ACCESS_LOG': 'true',
@@ -48,6 +50,19 @@ def test_server_xml_access_log_enabled(docker_cli, image):
     assert remove_ip_value.get('internalProxies') == environment.get('ATL_TOMCAT_PROXY_INTERNAL_IPS')
     access_log_valve = xml.find('.//Engine/Valve[@className="org.apache.catalina.valves.AccessLogValve"]')
     assert access_log_valve.get('prefix') == 'crowd_access'
+
+
+def test_server_xml_access_log_disabled(docker_cli, image):
+    environment = {
+        'ATL_TOMCAT_ACCESS_LOG': 'false',
+    }
+    container = run_image(docker_cli, image, environment=environment)
+    _jvm = wait_for_proc(container, get_bootstrap_proc(container))
+    current_date = datetime.now().date()
+    formatted_date = current_date.strftime("%Y-%m-%d")
+    assert not container.file(f'{get_app_install_dir(container)}/apache-tomcat/logs/crowd_access.{formatted_date}.log').exists
+
+
 
 
 def test_server_xml_params(docker_cli, image):
@@ -90,7 +105,8 @@ def test_server_xml_params(docker_cli, image):
     assert connector.get('maxHttpHeaderSize') == environment.get('ATL_TOMCAT_MAXHTTPHEADERSIZE')
 
     # FIXME - Crowd context path is nontrivial to set
-    #assert context.get('path') == environment.get('ATL_TOMCAT_CONTEXTPATH')
+    # assert context.get('path') == environment.get('ATL_TOMCAT_CONTEXTPATH')
+
 
 def test_server_xml_catalina_fallback(docker_cli, image):
     environment = {
@@ -112,7 +128,8 @@ def test_server_xml_catalina_fallback(docker_cli, image):
     assert connector.get('secure') == environment.get('CATALINA_CONNECTOR_SECURE')
     assert connector.get('scheme') == environment.get('CATALINA_CONNECTOR_SCHEME')
     # FIXME - Crowd context path is nontrivial to set
-    #assert context.get('path') == environment.get('CATALINA_CONTEXT_PATH')
+    # assert context.get('path') == environment.get('CATALINA_CONTEXT_PATH')
+
 
 def test_init_properties_custom_home(docker_cli, image, run_user):
     environment = {
@@ -121,20 +138,23 @@ def test_init_properties_custom_home(docker_cli, image, run_user):
     container = run_image(docker_cli, image, environment=environment)
     _jvm = wait_for_proc(container, get_bootstrap_proc(container))
 
-    properties = parse_properties(container, f'{get_app_install_dir(container)}/crowd-webapp/WEB-INF/classes/crowd-init.properties')
+    properties = parse_properties(container,
+                                  f'{get_app_install_dir(container)}/crowd-webapp/WEB-INF/classes/crowd-init.properties')
     assert properties.get('crowd.home') == environment['CROWD_HOME']
+
 
 def test_init_properties_default_home(docker_cli, image, run_user):
     container = run_image(docker_cli, image)
     _jvm = wait_for_proc(container, get_bootstrap_proc(container))
 
-    properties = parse_properties(container, f'{get_app_install_dir(container)}/crowd-webapp/WEB-INF/classes/crowd-init.properties')
+    properties = parse_properties(container,
+                                  f'{get_app_install_dir(container)}/crowd-webapp/WEB-INF/classes/crowd-init.properties')
     assert properties.get('crowd.home') == get_app_home(container)
 
 
 def test_clean_shutdown(docker_cli, image, run_user):
     container = docker_cli.containers.run(image, detach=True, user=run_user, ports={PORT: PORT})
-    host = testinfra.get_host("docker://"+container.id)
+    host = testinfra.get_host("docker://" + container.id)
 
     started = r'org\.apache\.catalina\.startup\.Catalina\.start Server startup'
     wait_for_log(container, started)
@@ -147,7 +167,7 @@ def test_clean_shutdown(docker_cli, image, run_user):
 
 def test_shutdown_script(docker_cli, image, run_user):
     container = docker_cli.containers.run(image, detach=True, user=run_user, ports={PORT: PORT})
-    host = testinfra.get_host("docker://"+container.id)
+    host = testinfra.get_host("docker://" + container.id)
 
     started = r'org\.apache\.catalina\.startup\.Catalina\.start Server startup'
     wait_for_log(container, started)
