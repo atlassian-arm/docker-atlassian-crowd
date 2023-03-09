@@ -34,6 +34,22 @@ def test_server_xml_defaults(docker_cli, image):
     assert connector.get('proxyPort') == ''
     assert connector.get('maxHttpHeaderSize') == '8192'
 
+def test_server_xml_access_log_enabled(docker_cli, image):
+    environment = {
+        'ATL_TOMCAT_ACCESS_LOG': 'true',
+        'ATL_TOMCAT_PROXY_INTERNAL_IPS': '192.168.1.1',
+    }
+
+    container = run_image(docker_cli, image, environment=environment)
+    _jvm = wait_for_proc(container, get_bootstrap_proc(container))
+
+    xml = parse_xml(container, f'{get_app_install_dir(container)}/apache-tomcat/conf/server.xml')
+    remove_ip_value = xml.find('.//Engine/Valve[@className="org.apache.catalina.valves.RemoteIpValve"]')
+    assert remove_ip_value.get('internalProxies') == environment.get('ATL_TOMCAT_PROXY_INTERNAL_IPS')
+    access_log_valve = xml.find('.//Engine/Valve[@className="org.apache.catalina.valves.AccessLogValve"]')
+    assert access_log_valve.get('prefix') == 'crowd_access'
+
+
 def test_server_xml_params(docker_cli, image):
     environment = {
         'ATL_TOMCAT_MGMT_PORT': '8006',
