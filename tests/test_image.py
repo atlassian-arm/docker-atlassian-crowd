@@ -98,6 +98,16 @@ def test_server_xml_catalina_fallback(docker_cli, image):
     # FIXME - Crowd context path is nontrivial to set
     #assert context.get('path') == environment.get('CATALINA_CONTEXT_PATH')
 
+def test_init_properties_(docker_cli, image, run_user):
+    environment = {
+        'CROWD_HOME': '/opt',
+    }
+    container = run_image(docker_cli, image, environment=environment)
+    _jvm = wait_for_proc(container, get_bootstrap_proc(container))
+
+    properties = parse_properties(container, f'{get_app_install_dir(container)}/crowd-webapp/WEB-INF/classes/crowd-init.properties')
+    assert properties.get('crowd.home') == environment['CROWD_HOME']
+
 
 def test_clean_shutdown(docker_cli, image, run_user):
     container = docker_cli.containers.run(image, detach=True, user=run_user, ports={PORT: PORT})
