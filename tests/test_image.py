@@ -52,7 +52,7 @@ def test_server_xml_access_log_enabled(docker_cli, image):
     assert access_log_valve.get('prefix') == 'crowd_access'
 
 
-def test_server_xml_access_log_disabled(docker_cli, image):
+def test_access_log_disabled(docker_cli, image):
     environment = {
         'ATL_TOMCAT_ACCESS_LOG': 'false',
     }
