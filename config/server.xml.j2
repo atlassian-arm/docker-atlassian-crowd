@@ -32,7 +32,8 @@
                    prefix="crowd_access"
                    suffix=".log"
                    rotatable="true"
-                   pattern="%h %{X-AUSERNAME}o %t &quot;%r&quot; %s %b %D %U %I &quot;%{User-Agent}i&quot;" />
+                   pattern="%h %{X-AUSERNAME}o %t &quot;%r&quot; %s %b %D %U %I &quot;%{User-Agent}i&quot;" 
+                   maxDays="{{ atl_tomcat_access_logs_maxdays | default('-1') }}"/>
             <Valve className="org.apache.catalina.valves.RemoteIpValve"
                    proxiesHeader="x-forwarded-by"
                    internalProxies="{{ atl_tomcat_proxy_internal_ips | default('') }}"
