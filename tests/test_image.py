@@ -20,7 +20,6 @@ def test_server_xml_defaults(docker_cli, image):
 
     xml = parse_xml(container, f'{get_app_install_dir(container)}/apache-tomcat/conf/server.xml')
     connector = xml.find('.//Connector')
-    valve = xml.find('.//Valve[@className="org.apache.catalina.valves.AccessLogValve"]')
 
     assert connector.get('port') == '8095'
     assert connector.get('maxThreads') == '150'
@@ -34,8 +33,6 @@ def test_server_xml_defaults(docker_cli, image):
     assert connector.get('proxyName') == ''
     assert connector.get('proxyPort') == ''
     assert connector.get('maxHttpHeaderSize') == '8192'
-
-    assert valve.get('maxDays') == '-1'
 
 def test_server_xml_access_log_enabled(docker_cli, image):
     environment = {
@@ -82,6 +79,7 @@ def test_server_xml_params(docker_cli, image):
         'ATL_PROXY_PORT': '443',
         'ATL_TOMCAT_MAXHTTPHEADERSIZE': '8193',
         'ATL_TOMCAT_CONTEXTPATH': '/mycrowd',
+        "ATL_TOMCAT_ACCESS_LOG": 'true',
         'ATL_TOMCAT_ACCESS_LOGS_MAXDAYS': '10',
     }
     container = run_image(docker_cli, image, environment=environment)
